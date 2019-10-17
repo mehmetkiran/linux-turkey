@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+    <!-- Basic Page Needs -->
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}
+        {% block hello %}
+            {{ block.super }} | {{ site_name }}
+        {% endblock %}</title>
+    <meta name="description" content="Linux Turkey">
+    <meta name="author" content="Linux Turkey">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Skins -->
+    <link rel="stylesheet" href="{% static 'css/skins/skins.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <!-- Responsive Style -->
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet"
+          href="{% static 'ckeditor/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css' %}"/>
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+</head>
+<body>
+<div class="loader">
+    <div class="loader_html"></div>
+</div>
+<div id="wrap" class="grid_1200">
+    {% block header %}
+    {% endblock %}
+    {% block body %}
+    {% endblock %}
+    <div class="go-up"><i class="icon-chevron-up"></i></div>
+    <footer id="footer">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="widget widget_contact">
+                        <h3 class="widget_title">Hakkımızda</h3>
+                        <p>{{ aboutUs }}</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="widget">
+                        <h3 class="widget_title">Hızlı Adres</h3>
+                        <ul>
+                            <li><a href="{% url 'home:home' %}">Ana Sayfa</a></li>
+                            <li><a href="{% url 'question:askQuestion' %}">Soru Sor</a></li>
+                            <li><a href="{% url 'home:contacUs' %}">Iletişim</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="widget">
+                        <h3 class="widget_title">Duyurular</h3>
+                        <ul class="related-posts">
+                            <li class="related-item">
+                                <h3><a href="#">{{ popularQuestion.id }}</a></h3>
+                                <p>{{ popularQuestion.answer }}</p>
+                                <div class="clear"></div>
+                                <span>{{ popularQuestion.answerDate }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="widget widget_twitter">
+                        <h3 class="widget_title">Son Tweetler</h3>
+                        <div class="tweet_1">
+                            {#                            <a class="twitter-timeline" data-width="340" data-height="300" data-theme="dark"#}
+                            {#                               href="https://twitter.com/linux_turkiye?ref_src=twsrc%5Etfw">Tweets by linux_turkiye</a>#}
+                            {#                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>#}
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </section><!-- End container -->
+    </footer><!-- End footer -->
+    <footer id="footer-bottom">
+        <section class="container">
+            <div class="copyrights f_left">Tüm hakları sakldır {% now 'Y' %} <br>
+                Bu tema <a
+                        href="https://themeforest.net/item/ask-me-responsive-questions-and-answers-template/6357488">By
+                    2code</a> tarafından hazırlanmıştır.
+                sys_verison: {{ APP_VERSION }}</div>
+            <div class="social_icons f_right">
+                <ul>
+                    <li class="twitter"><a original-title="Twitter" class="tooltip-n" href="#"><i
+                            class="social_icon-twitter font17"></i></a></li>
+                    <li class="facebook"><a original-title="Facebook" class="tooltip-n" href="#"><i
+                            class="social_icon-facebook font17"></i></a></li>
+
+                    <li class="youtube"><a original-title="Youtube" class="tooltip-n" href="#"><i
+                            class="social_icon-youtube font17"></i></a></li>
+
+                    <li class="rss"><a original-title="Rss" class="tooltip-n" href="#"><i
+                            class="social_icon-rss font17"></i></a></li>
+                </ul>
+            </div><!-- End social_icons -->
+        </section><!-- End container -->
+    </footer><!-- End footer-bottom -->
+</div><!-- End wrap -->
+
+<div class="go-up"><i class="icon-chevron-up"></i></div>
+
+<!--
+       ,           ,
+      /             \
+     ((__-^^-,-^^-__))  GNU
+      `-_---' `---_-'
+       `--|o` 'o|--'
+          \  `  /
+           ): :(
+           :o_o:
+            "-"
+-->
+
+
+<!-- js -->
+<script src="{% static 'js/highlightjs/highlight.pack.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.all.js"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui-1.10.3.custom.min.js' %}"></script>
+<script src="{% static 'js/jquery.easing.1.3.min.js' %}"></script>
+<script src="{% static 'js/html5.js' %}"></script>
+<script src="{% static 'js/jflickrfeed.min.js' %}"></script>
+<script src="{% static 'js/jquery.inview.min.js' %}"></script>
+<script src="{% static 'js/jquery.tipsy.js' %}"></script>
+<script src="{% static 'js/tabs.js' %}"></script>
+<script src="{% static 'js/jquery.flexslider.js' %}"></script>
+<script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
+<script src="{% static 'js/jquery.carouFredSel-6.2.1-packed.js' %}"></script>
+<script src="{% static 'js/jquery.scrollTo.js' %}"></script>
+<script src="{% static 'js/jquery.nav.js' %}"></script>
+<script src="{% static 'js/tags.js' %}"></script>
+<script src="{% static 'js/jquery.bxslider.min.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!-- End js -->
+{% load sweetify %}
+{% sweetify %}
+{% block script %}
+{% endblock %}
+</body>
+</html>

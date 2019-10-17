@@ -1,0 +1,32 @@
+{% extends base_template %}
+{% block body %}
+
+    <section class="container main-content">
+        <div class="login">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="page-content">
+                        <h2>Kayıt Ol</h2>
+                        <div class="form-style form-style-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ registerForm }}
+                                <p class="form-submit login-submit">
+                                    <input type="submit" value="Kayıt Ol"
+                                           class="button color small login-submit submit">
+                                </p>
+                            </form>
+                        </div>
+                    </div><!-- End page-content -->
+                </div><!-- End col-md-6 -->
+                <div class="col-md-6">
+                    <div class="page-content">
+                        <h2>Giriş Yap</h2>
+                        <p>Üye isen buradan giriş yapabilirsin.</p>
+                        <a href="{% url 'user:login' %}" class="button small color">Giriş</a>
+                    </div><!-- End page-content -->
+                </div><!-- End col-md-6 -->
+            </div><!-- End row -->
+        </div><!-- End login -->
+    </section><!-- End container -->
+{% endblock %}

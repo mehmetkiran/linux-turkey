@@ -1,0 +1,71 @@
+{% extends base_template %}
+{% load humanize %}
+{% block body %}
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                {% for question in questions %}
+                    <article class="question question-type-normal">
+                        <h2>
+                            <a href="{% url 'question:showQuestion' question.id %}">{{ question.questionTitle }}</a>
+                        </h2>
+                        <div class="question-type-main"><i class="icon-question-sign"></i>Soru</div>
+                        <div class="question-author">
+                            <a href="{% url 'user:showProfile' question.userID_id %}"
+                               original-title="{{ question.userID }}"
+                               class="question-author-img tooltip-n"><span></span><img
+                                    alt="" src="{{ question.userID.profileImage.url }}"></a>
+                        </div>
+                        <div class="question-inner">
+                            <div class="clearfix"></div>
+                            <p class="question-desc">{{ question.questionContent|safe|truncatewords:40 }}
+                                <a href="{% url 'question:showQuestion' question.id %}">okumaya devam et</a>
+                            </p>
+                            <div class="question-details">
+                                <span class="question-favorite"><i class="icon-star"></i>5</span>
+                            </div>
+                            <span class="question-category"><a href="#"><i
+                                    class="icon-folder-close"></i>{{ question.categoryID }}</a></span>
+                            <span class="question-date"><i
+                                    class="icon-time"></i>{{ question.questionCreateDate|naturaltime }}</span>
+                            <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
+                            <span class="question-view"><i
+                                    class="icon-user"></i>{{ question.questionViewCounter }}</span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </article>
+                {% endfor %}
+                <div class="height_20"></div>
+                <div class="pagination">
+                    {% if questions.has_previous %}
+                        <a href="#" class="prev-button"><i class="icon-angle-left"></i></a>
+                        <a href="?page=1">&laquo; ilk</a>
+                        <a href="?page={{ questions.previous_page_number }}">
+                            {{ questions.previous_page_number }}</a>
+                    {% endif %}
+                    {% if questions.has_next %}
+                        <a href="?page={{ questions.next_page_number }}">{{ questions.next_page_number }} </a>
+                        <a href="?page={{ questions.paginator.num_pages }}">son
+                            &raquo;</a>
+                        <a href="?page={{ questions.next_page_number }}" class="next-button"><i
+                                class="icon-angle-right"></i></a>
+                    {% endif %}
+                </div><!-- End pagination -->
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include 'components/commonComponents/widget_stats.html' %}
+
+                {% include 'components/commonComponents/widget_social.html' %}
+
+                {% include loginPanel %}
+
+                {% include 'components/commonComponents/widget_highest_points.html' %}
+
+                {% include 'components/commonComponents/widget_tag_cloud.html' %}
+
+                {% include 'components/commonComponents/widget_recent_question.html' %}
+
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+{% endblock %}

@@ -1,0 +1,21 @@
+<div class="widget widget_login">
+    <h3 class="widget_title">Profil</h3>
+    <div class="form-style form-style-2">
+        <form>
+            <div class="form-inputs clearfix">
+                <p class="login-text">
+                    <input type="text" disabled value="{{ request.user.username }}">
+                    <i class="icon-user"></i>
+                </p>
+                <p class="login-password">
+                    <input type="text" disabled value="{{ request.user.email }}">
+                    <i class="icon-lock"></i>
+                </p>
+            </div>
+            <p class="form-submit login-submit">
+            </p>
+        </form>
+        <a href="{% url 'user:logout' %}">Çıkış</a>
+        <div class="clearfix"></div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+{% extends base_template %}
+
+{% block title %}Profili Duzenle{% endblock %}
+
+{% block body %}
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="page-content">
+                    <div class="boxedtitle page-title"><h2>Giriş Kayıtları</h2></div>
+                    <table id="loginHistory">
+                        <tr>
+                            <th>Giriş Tarihi</th>
+                            <th>Konum*</th>
+                            <th>Tarayıcı</th>
+                            <th>Durum</th>
+                        </tr>
+                        {% for loginHistory in loginHistory %}
+                            <tr>
+                                <td><span title="">{{ loginHistory.loginDate }}</span></td>
+                                <td><span title="{{ loginHistory.ipAddress }}">{{ loginHistory.location }}</span></td>
+                                <td><span title="{{ loginHistory.userAgent }}">{{ loginHistory.browser }}</span></td>
+                                <td><span title="">{% if loginHistory.status is True %}
+                                    <i class="icon-ok" style="color: green"></i> {% else %}
+                                    <i class="icon-ban-circle" style="color: red"></i> {% endif %}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div><!-- End page-content -->
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include sideMenu %}
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+{% endblock %}

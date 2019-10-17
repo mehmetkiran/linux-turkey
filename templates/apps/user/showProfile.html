@@ -1,0 +1,307 @@
+{% extends base_template %}
+{% load humanize %}
+{% block title %}Profil {% endblock %}
+{% block body %}
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="user-profile">
+                        <div class="col-md-12">
+                            <div class="page-content">
+                                <h2>{{ userProfile.username }}
+                                    <li style="background-color: #dd9933;color: #FFF;">
+                                        <span>{{ user.groups.all.0 }}</span></li>
+                                </h2>
+                                {% if userProfile.profileImage %}
+                                    <div class="user-profile-img"><img width="60" height="60"
+                                                                       src="{{ userProfile.profileImage.url }}"
+                                                                       alt="admin">
+                                    </div>
+                                {% else %}
+                                    <div class="user-profile-img"><img width="60" height="60"
+                                                                       src="http://placehold.it/60x60/FFF/444"
+                                                                       alt="admin">
+                                    </div>
+                                {% endif %}
+
+                                <div class="ul_list ul_list-icon-ok about-user">
+                                    <ul>
+                                        <li><i class="icon-plus"></i>Kayıt Tarihi :
+                                            <span>{{ userProfile.date_joined }}</span></li>
+                                        <li><i class="icon-map-marker"></i>Ülke :
+                                            <span>{{ userProfile.userCountry }}</span></li>
+                                        <li><i class="icon-globe"></i>Web Site : <a target="_blank"
+                                                                                    href="{{ userProfile.userWebsite }}">{{ userProfile.userWebsite }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                {% if userProfile.userAbout is None %}
+                                    <p>-</p>
+                                {% else %}
+                                    <p>{{ userProfile.userAbout }}</p>
+                                {% endif %}
+                                <div class="clearfix"></div>
+                                <span class="user-follow-me">Sosyal Medya Hesapları</span>
+                                {#                                Facebook URL#}
+                                {% if userProfile.userFacebook is not None %}
+                                    <a href="{{ userProfile.userFacebook }}" original-title="Facebook"
+                                       class="tooltip-n">
+									<span class="icon_i">
+										<span class="icon_square" icon_size="30" span_bg="#3b5997" span_hover="#2f3239">
+											<i class="social_icon-facebook"></i>
+										</span>
+									</span>
+                                    </a>
+                                {% endif %}
+
+                                {#                                Twitter URL#}
+                                {% if userProfile.userTwitter is not None %}
+                                    <a href="{{ userProfile.userTwitter }}" original-title="Twitter" class="tooltip-n">
+									<span class="icon_i">
+										<span class="icon_square" icon_size="30" span_bg="#00baf0" span_hover="#2f3239">
+											<i class="social_icon-twitter"></i>
+										</span>
+									</span>
+                                    </a>
+                                {% endif %}
+
+                                {#                                Linkedin URL#}
+                                {% if userProfile.userLinkedin is not None %}
+                                    <a href="{{ userProfile.userLinkedin }}" original-title="Linkedin"
+                                       class="tooltip-n">
+									<span class="icon_i">
+										<span class="icon_square" icon_size="30" span_bg="#006599" span_hover="#2f3239">
+											<i class="social_icon-linkedin"></i>
+										</span>
+									</span>
+                                    </a>
+                                {% endif %}
+
+                                {#                                E-Mail URL#}
+                                {% if userProfile.email is not None %}
+                                    <a href="mailto:{{ userProfile.email }}" original-title="Email" class="tooltip-n">
+									<span class="icon_i">
+										<span class="icon_square" icon_size="30" span_bg="#000" span_hover="#2f3239">
+											<i class="social_icon-email"></i>
+										</span>
+									</span>
+                                    </a>
+                                {% endif %}
+                            </div><!-- End page-content -->
+                        </div><!-- End col-md-12 -->
+                        <div class="col-md-12">
+                            <div class="page-content page-content-user-profile">
+                                <div class="user-profile-widget">
+                                    <h2>Kullanıcı İstatistikleri</h2>
+                                    <div class="ul_list ul_list-icon-ok">
+                                        <ul>
+                                            <li><i class="icon-question-sign"></i><a href="#tab">Sorduğu
+                                                Sorular<span> ( <span>{{ userQuestionCount }}</span> ) </span></a>
+                                            </li>
+                                            <li><i class="icon-star"></i><a href="#tab">Favori
+                                                Soruları
+                                                <span> ( <span>{{ userFavoriteQuestionCount }}</span> ) </span></a></li>
+                                            <li><i class="icon-comment"></i><a href="#tab">Verdiği
+                                                Cevaplar<span> ( <span>{{ userAnswerCount }}</span> ) </span></a>
+                                            </li>
+                                            <li><i class="icon-heart"></i><a
+                                                    href="">Verdiği
+                                                Puanlar<span> ( <span>{{ userPoint }}</span> ) </span></a>
+                                            </li>
+                                            <li><i class="icon-asterisk"></i>En İyi
+                                                Cevapları<span> ( <span>{{ userBestAnswer }}</span> ) </span></li>
+                                        </ul>
+                                    </div>
+                                </div><!-- End user-profile-widget -->
+                            </div><!-- End page-content -->
+                        </div><!-- End col-md-12 -->
+                    </div><!-- End user-profile -->
+                </div><!-- End row -->
+                <div class="clearfix"></div>
+                <div class="page-content page-content-user">
+                    <div class="user-questions" id="tab">
+                        <div class="tabs-warp">
+                            <ul class="tabs" style="border-bottom-color: #222428 !important;">
+                                <li class="tab"><a href="#" class="current">Sorduğu Sorular</a></li>
+                                <li class="tab"><a href="#">Cevaplar</a></li>
+                                                                <li class="tab"><a href="#">Favori Soruları</a></li>
+                            </ul>
+                            <div class="tab-inner-warp" style="display: block; background-color: #222428 !important;">
+                                <div class="tab-inner">
+                                    {% if  not userQuestion %}
+                                        <div class="alert-message warning">
+                                            <i class="icon-exclamation-sign"></i>
+                                            <p><span>{{ userProfile.username }}</span><br>
+                                                Daha soru sormamış</p>
+                                        </div>
+                                    {% else %}
+                                        {% for userQuestion in userQuestion %}
+                                            <article class="question user-question">
+                                                <h3>
+                                                    <a href="{% url 'question:showQuestion' slug=userQuestion.slug %}">{{ userQuestion.questionTitle }}</a>
+                                                </h3>
+                                                <div class="question-type-main"><i class="icon-question-sign"></i>Soru
+                                                </div>
+
+                                                <div class="question-content">
+                                                    <div class="question-bottom">
+                                                        <div class="question-answered"><i class="icon-ok"></i>in
+                                                            progress
+                                                        </div>
+                                                        <span class="question-favorite"><i class="icon-star"></i></span>
+                                                        <span class="question-category"><a href="#"><i
+                                                                class="icon-folder-close"></i>{{ userQuestion.categoryID }}</a></span>
+                                                        <span class="question-date"><i
+                                                                class="icon-time"></i>{{ userQuestion.questionCreateDate|naturaltime }}</span>
+                                                        <span class="question-comment"><a href="#"><i
+                                                                class="icon-comment"></i>5 Answers</a></span>
+                                                        <a class="question-reply"
+                                                           href="{% url 'question:showQuestion' userQuestion.id %}"><i
+                                                                class="icon-reply"></i>Cevapla</a>
+                                                        <span class="question-view"><i
+                                                                class="icon-user"></i>{{ userQuestion.questionViewCounter }}</span>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        {% endfor %}
+                                        <div class="height_20"></div>
+                                        <div class="pagination">
+                                            {% if userQuestion.has_previous %}
+                                                <a href="#" class="prev-button"><i class="icon-angle-left"></i></a>
+                                                <a href="?questionPage=1">&laquo; ilk</a>
+                                                <a href="?questionPage={{ userQuestionuserQuestion.previous_page_number }}">
+                                                    {{ userQuestion.previous_page_number }}</a>
+                                            {% endif %}
+                                            {% if userQuestion.has_next %}
+                                                <a href="?questionPage={{ userQuestion.next_page_number }}">{{ userQuestion.next_page_number }} </a>
+                                                <a href="?questionPage={{ userQuestion.paginator.num_pages }}">son
+                                                    &raquo;</a>
+                                                <a href="?questionPage={{ userQuestion.next_page_number }}"
+                                                   class="next-button"><i class="icon-angle-right"></i></a>
+                                            {% endif %}
+                                        </div><!-- End pagination -->
+                                        <span class="step-links">
+                                    {% endif %}
+                                    </span></div>
+                            </div>
+                            <div class="tab-inner-warp" style="display: none;  background-color: #222428 !important;">
+                                <div class="tab-inner">
+                                    {% if not userAnswer %}
+                                        <div class="alert-message warning">
+                                            <i class="icon-exclamation-sign"></i>
+                                            <p><span>{{ userProfile.username }}</span><br>
+                                                Daha soru cevaplamamış</p>
+                                        </div>
+                                    {% else %}
+                                        {% for userAnswer in userAnswer %}
+                                            <article class="question user-question">
+                                                <h3>
+                                                    <a href="{% url 'question:showQuestion' slug=userAnswer.questionID.slug %}">{{ userAnswer.questionID.questionTitle }}</a>
+                                                </h3>
+                                                <div class="question-type-main"><i class="icon-question-sign"></i>Soru
+                                                </div>
+                                                <div class="question-content">
+                                                    <div class="question-bottom">
+                                                        <span class="question-category"><a href="#"><i
+                                                                class="icon-folder-close"></i>
+                                                            {{ userAnswer.questionID.categoryID }}</a></span>
+                                                        <span class="question-date"><i
+                                                                class="icon-time"></i>{{ userAnswer.answerDate|naturaltime }}</span>
+
+                                                        <a class="question-reply"
+                                                           href="{% url 'question:showQuestion' userAnswer.id %}"><i
+                                                                class="icon-reply"></i>Cevapla</a>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        {% endfor %}
+                                        <div class="height_20"></div>
+                                        <div class="pagination">
+                                            {% if userAnswer.has_previous %}
+                                                <a href="#" class="prev-button"><i class="icon-angle-left"></i></a>
+                                                <a href="?answerPage=1">&laquo; ilk</a>
+                                                <a href="?answerPage={{ userAnswer.previous_page_number }}">
+                                                    {{ userAnswer.previous_page_number }}</a>
+                                            {% endif %}
+                                            {% if userAnswer.has_next %}
+                                                <a href="?answerPage={{ userAnswer.next_page_number }}">{{ userAnswer.next_page_number }} </a>
+                                                <a href="?answerPage={{ userAnswer.paginator.num_pages }}">son
+                                                    &raquo;</a>
+                                                <a href="?answerPage={{ userAnswer.next_page_number }}"
+                                                   class="next-button"><i class="icon-angle-right"></i></a>
+                                            {% endif %}
+                                        </div><!-- End pagination -->
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="tab-inner-warp" style="display: none; background-color: #222428 !important;">
+                                <div class="tab-inner">
+                                    {% if not userFavoriteQuestion %}
+                                        <div class="alert-message warning">
+                                            <i class="icon-exclamation-sign"></i>
+                                            <p><span>{{ userProfile.username }}</span> <br>
+                                                Favori sorusu yok</p>
+                                        </div>
+                                    {% else %}
+                                        {% for userFavoriteQuestion in userFavoriteQuestion %}
+                                            <article class="question user-question">
+                                                <h3>
+                                                    <a href="{% url 'question:showQuestion' slug=userFavoriteQuestion.questionID.slug %}">
+                                                        {{ userFavoriteQuestion.questionID.questionTitle }}</a>
+                                                </h3>
+                                                <div class="question-type-main"><i class="icon-question-sign"></i>Soru
+                                                </div>
+                                                <div class="question-content">
+                                                    <div class="question-bottom">
+                                                        <span class="question-category"><a href="#"><i
+                                                                class="icon-folder-close"></i>{{ userFavoriteQuestion.questionID.categoryID }}</a></span>
+                                                        <span class="question-date"><i
+                                                                class="icon-time"></i>{{ userFavoriteQuestion.id.questionCreateDate|naturaltime }}</span>
+                                                        <a class="question-reply"
+                                                           href="{% url 'question:showQuestion' userFavoriteQuestion.favoriteQuestionID %}"><i
+                                                                class="icon-reply"></i>Cevapla</a>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        {% endfor %}
+                                        <div class="height_20"></div>
+                                        <div class="pagination">
+                                            {% if userFavoriteQuestion.has_previous %}
+                                                <a href="#" class="prev-button"><i class="icon-angle-left"></i></a>
+                                                <a href="?favoritePage=1">&laquo; ilk</a>
+                                                <a href="?favoritePage={{ userFavoriteQuestion.previous_page_number }}">
+                                                    {{ userFavoriteQuestion.previous_page_number }}</a>
+                                            {% endif %}
+                                            {% if userFavoriteQuestion.has_next %}
+                                                <a href="?favoritePage={{ userFavoriteQuestion.next_page_number }}">{{ userFavoriteQuestion.next_page_number }} </a>
+                                                <a href="?favoritePage={{ userFavoriteQuestion.paginator.num_pages }}">son
+                                                    &raquo;</a>
+                                                <a href="?favoritePage={{ userFavoriteQuestion.next_page_number }}"
+                                                   class="next-button"><i class="icon-angle-right"></i></a>
+                                            {% endif %}
+                                        </div><!-- End pagination -->
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include 'components/commonComponents/widget_stats.html' %}
+
+                {% include 'components/commonComponents/widget_social.html' %}
+
+                {% include loginPanel %}
+
+                {% include 'components/commonComponents/widget_highest_points.html' %}
+
+                {% include 'components/commonComponents/widget_tag_cloud.html' %}
+
+                {% include 'components/commonComponents/widget_recent_question.html' %}
+
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+{% endblock %}

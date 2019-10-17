@@ -1,0 +1,15 @@
+{% extends base_template %}
+{% load static %}
+{% block body %}
+    <section class="container main-content">
+       <div class="row">
+            <div class="col-md-9">
+            <img src="{% static 'images/404.jpg' %}">
+        </div>
+           <div class="col-md-3">
+               <h3>404 Aradığın Sayfa Bulunamadı</h3>
+               <p>Tıkladığın adres bulunamadı. Adres değişmiş, taşınmış veya kaldırılmış olabilir.</p>
+           </div>
+       </div>
+    </section><!-- End container -->
+{% endblock %}

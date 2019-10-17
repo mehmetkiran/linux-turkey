@@ -1,0 +1,55 @@
+{% extends base_template %}
+{% block title %}Cevabı Düzenle{% endblock %}
+{% block body %}
+    <div class="breadcrumbs">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Cevabı Düzenle</h1>
+                </div>
+                <div class="col-md-12">
+                    <div class="crumbs">
+                        <a href="{% url 'home:home' %}">Ana Sayfa</a>
+                        <span class="crumbs-span">/</span>
+                        <a href="{% url 'home:home' %}">Sorular</a>
+                        <span class="crumbs-span">/</span>
+                        <span class="current">Cevabı Düzenle</span>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </section><!-- End container -->
+    </div><!-- End breadcrumbs -->
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="page-content ask-question">
+                    <div class="boxedtitle page-title"><h2>Cevabı Düzenle</h2></div>
+                    <div class="form-style form-style-3" id="question-submit">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            {{ editForm.as_p }}
+                            <div class="clearfix">
+                                <input type="submit" id="publish-question" value="Cevabı Güncelle"
+                                       class="button color small submit"></div>
+                        </form>
+                    </div>
+                </div><!-- End page-content -->
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include 'components/commonComponents/widget_stats.html' %}
+
+                {% include 'components/commonComponents/widget_social.html' %}
+
+                {% include loginPanel %}
+
+                {% include 'components/commonComponents/widget_highest_points.html' %}
+
+                {% include 'components/commonComponents/widget_tag_cloud.html' %}
+
+                {% include 'components/commonComponents/widget_recent_question.html' %}
+
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+    <!-- End wrap -->
+{% endblock %}

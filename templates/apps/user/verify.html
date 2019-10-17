@@ -1,0 +1,64 @@
+{% extends base_template %}
+{% block body %}
+
+    <section class="container main-content">
+        <div class="login">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-content">
+                        <h2>Hesabı Onayla</h2>
+                        <div class="form-style form-style-3">
+                            <label for="publicKey">Doğrulama Kodu</label>
+                            <input type="text" id="publicKey">
+                            <p class="form-submit login-submit">
+                                <a id="submit"
+                                   class="button color small login-submit submit">Onayla
+                                </a>
+                            </p>
+                        </div>
+                    </div><!-- End page-content -->
+                </div>
+            </div><!-- End row -->
+        </div><!-- End login -->
+    </section><!-- End container -->
+{% endblock %}
+{% block script %}
+    <script>
+        var url = '{% url 'user:verifyAjax' %}';
+        var publicKey = $("input#publicKey").val();
+        $("#submit").click(function () {
+            if ($("input#publicKey").val() == null || $("input#publicKey").val() == "") {
+                toastr.error('Boş kod gönderilmez!')
+            }
+            else {
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    data: {
+                        'publicKey': $("input#publicKey").val()
+                    },
+                    dataType: 'json',
+                    beforeSend: function () {
+                        toastr.success('Doğrulama kodu gönderiliyor.')
+                    },
+                    success: function (data) {
+                        if (data) {
+                            toastr.success('Doğrulama başarılı');
+
+                        }
+                        else {
+                            toastr.remove();
+                            toastr.error('Doğrulama kodu hatalı');
+
+                        }
+                    },
+                    complete: function () {
+                        window.location.reload();
+                    }
+                })
+            }
+
+        })
+
+    </script>
+{% endblock %}

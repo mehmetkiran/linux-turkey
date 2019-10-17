@@ -1,0 +1,70 @@
+{% extends base_template %}
+{% load humanize %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block body %}
+<section class="container main-content">
+    <div class="row">
+        <div class="col-md-9">
+            {% for article in article_ %}
+                <article class="post blog_2 clearfix">
+                    <div class="post-inner">
+                        <h2 class="post-title"><span class="post-type"><i class="icon-picture"></i></span>
+                            <a href="{% url 'article:articleRead' article.id %}">{{ article.articleTitle }}</a>
+                        </h2>
+                        <div class="post-img"><a href="{% url 'article:articleRead' article.id %}"><img
+                                src="{{ article.articleCoverImage.url }}" style="height: 250px; height: 190px"
+                                alt=""></a></div>
+                        <div class="post-meta">
+                                <span class="meta-author"><i class="icon-user"></i><a
+                                        href="#">{{ article.articleAuthor }}</a></span>
+                            <span class="meta-date"><i
+                                    class="icon-time"></i>{{ article.articleCreateDate|naturaltime }}</span>
+                            <span class="meta-categories"><i class="icon-suitcase"></i><a
+                                    href="#">{{ article.categoryName }}</a></span>
+                            <span class="meta-comment"><i class="icon-comments-alt"></i><a
+                                    href="#">15 comments</a></span>
+                        </div>
+                        <div class="post-content">
+                            <p>{{ article.articleContent|safe|truncatewords:40 }}</p>
+                            <a href="{% url 'article:articleRead' article.id %}"
+                               class="post-read-more button color small">Okumaya devam et...</a>
+                        </div><!-- End post-content -->
+                    </div><!-- End post-inner -->
+                </article><!-- End article.post -->
+            {% endfor %}
+            <div class="height_20"></div>
+            <span class="step-links"></span>
+                       <div class="pagination">
+                {% if article_.has_previous %}
+                    <a href="#" class="prev-button"><i class="icon-angle-left"></i></a>
+                    <a href="?page=1">&laquo; ilk</a>
+                    <a href="?page={{ article_.previous_page_number }}">
+                        {{ article_.previous_page_number }}</a>
+                {% endif %}
+                {% if article_.has_next %}
+                    <a href="?page={{ article_.next_page_number }}">{{ article_.next_page_number }} </a>
+                    <a href="?page={{ article_.paginator.num_pages }}">son
+                        &raquo;</a>
+                    <a href="?page={{ article_.next_page_number }}" class="next-button"><i
+                            class="icon-angle-right"></i></a>
+                {% endif %}
+            </div><!-- End pagination -->
+        </div><!-- End main -->
+        <aside class="col-md-3 sidebar">
+            {% include 'components/commonComponents/widget_stats.html' %}
+
+            {% include 'components/commonComponents/widget_social.html' %}
+
+            {% include 'components/commonComponents/widget_login.html' %}
+
+            {% include 'components/commonComponents/widget_highest_points.html' %}
+
+            {% include loginPanel %}
+
+            {% include 'components/commonComponents/widget_recent_question.html' %}
+
+        </aside><!-- End sidebar -->
+    </div><!-- End row -->
+</section><!-- End container -->
+{% endblock %}

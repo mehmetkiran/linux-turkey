@@ -1,0 +1,508 @@
+{% extends base_template %}
+{% load humanize %}
+{#{% load vote %}#}
+{% block title %}{{ question.questionTitle }}{% endblock %}
+{% block body %}
+    <div class="breadcrumbs">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>{{ question.questionTitle }}</h1>
+                </div>
+                <div class="col-md-12">
+                    <div class="crumbs">
+                        <a href="{% url 'home:home' %}">Ana Sayfa</a>
+                        <span class="crumbs-span">/</span>
+                        <a href="{% url 'question:questionCategory' question.categoryID_id %}">{{ question.categoryID }}</a>
+                        <span class="crumbs-span">/</span>
+                        <a>{{ question.questionTitle }}</a>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </section><!-- End container -->
+    </div><!-- End breadcrumbs -->
+    <div class="panel-pop" id="signup" style="margin-top: -166px; top: -100%; display: block;">
+        <h2>Raporla<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            {% if CheckQuestionReport is False %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ QuestionReportForm }}
+                    <p class="form-submit">
+                        <button type="submit" name="submit" value="reportForm" class="button small red-button">Raporla
+                        </button>
+                    </p>
+                </form>
+            {% elif CheckQuestionReport is True %}
+                <p>Bu soruyu daha önce raporlamışsın</p>
+            {% endif %}
+        </div>
+    </div>
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <article class="question single-question question-type-normal">
+                    <h2>
+                        <a href="#">{{ question.questionTitle }}</a>
+                    </h2>
+                    <div class="question-type-main"><i class="icon-question-sign"></i>Soru</div>
+                    <a class="question-report signup" href="">Rapor</a>
+                    <div class="question-inner">
+                        <div class="clearfix"></div>
+                        <div class="question-desc">
+                            {{ question.questionContent|safe }}
+                        </div>
+                        <div class="question-details">
+                            {% if bestAnswer is True %}
+                                <span class="question-answered question-answered-done"><i
+                                        class="icon-ok"></i>Çözüldü</span>
+                            {% endif %}
+                            <span class="question-favorite"
+                                  title="Toplam {{ favorite_counter }} kez favorilendi"><i
+                                    class="icon-star"></i><span
+                                    id="favoriteQuestion">{{ favorite_counter }}</span></span>
+                        </div>
+                        <span class="question-category"><a href=""><i
+                                class="icon-folder-close"></i>{{ question.categoryID }}</a></span>
+                        <span class="question-date"><i
+                                class="icon-time"></i>{{ question.questionCreateDate|naturaltime }}
+                           </span>
+                        {% if question.questionEditDate %}
+                            <span class="question-date"><i
+                                    class="icon-edit"></i>
+                                {{ question.questionEditDate|naturaltime }} düzenlendi.</span>
+                        {% endif %}
+                        <span class="question-comment"><a href="#commentBox"><i
+                                class="icon-comment"></i><span id="commentCounter">{{ AnswerCounter }}</span> Cevap</a></span>
+                        <span class="question-view"><i class="icon-user"></i>{{ question.questionViewCounter }}</span>
+                        {% if request.user.id == question.userID_id %}
+                            <span class="question-view" style="margin-left: 10px">
+                                <a href="{% url 'question:editQuestion' question.id %}"
+                                   class="button small green-button">Düzenle</a>
+                                <a onclick="deleteQuestion({{ question.id }})"
+                                   class="button small red-button">Sil</a>
+                            </span>
+                        {% endif %}
+                        <span class="single-question-vote-result">Toplam {{ QuestionReview }} Oy Aldı</span>
+
+                        {% if is_favorited is True %}
+                            <a id="addFavorite" class="single-question-add-favorite"
+                               title="Favori Ekle"
+                               style="background-color: #dfaa63; !important; color: white !important;"><i
+                                    class="icon-star"></i></a>
+                        {% else %}
+                            <a id="addFavorite" class="single-question-add-favorite"
+                               title="Favori Ekle"><i
+                                    class="icon-star"></i></a>
+                        {% endif %}
+                        <div class="clearfix"></div>
+                    </div>
+                </article>
+                <div class="about-author clearfix">
+                    <div class="author-image">
+                        <a href="{% url 'user:showProfile'  question.userID_id %}"
+                           original-title="{{ question.userID }}" class="tooltip-n"><img alt=""
+                                                                                         src="{{ question.userID.profileImage.url }}"></a>
+                    </div>
+                    <div class="author-bio">
+                        <h4>Yazar Hakkında</h4>
+                        <p>{{ question.userID.userAbout }}</p>
+                    </div>
+                </div><!-- End about-author -->
+                <div id="related-posts">
+                    <h2>Benzer Sorular</h2>
+                    <ul class="related-posts">
+                        {% for randomQuestion in randomQuestion %}
+                            <li class="related-item">
+                                <h3><a href="{% url 'question:showQuestion' randomQuestion.slug %}"><i
+                                        class="icon-double-angle-right"></i>{{ randomQuestion.questionTitle }}</a>
+                                </h3>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div><!-- End related-posts -->
+                <div id="commentlist" class="page-content">
+                    <div class="boxedtitle page-title"><h2>Cevaplar (<span id="commentCounter_"
+                                                                           class="color">{{ AnswerCounter }}</span>)
+                    </h2></div>
+                    <ol class="commentlist clearfix">
+                        {% for answer in answer %}
+                            <li class="comment" id="commentBox">
+                                <div class="comment-body comment-body-answered clearfix">
+                                    <div class="author-image">
+                                        <a href="{% url 'user:showProfile'  question.userID_id %}"
+                                           original-title="{{ question.userID }}" class="tooltip-n">
+                                            <img src="{{ question.userID.profileImage.url }}"></a>
+                                    </div>
+                                    <div class="comment-text">
+                                        <div class="author clearfix">
+                                            <div class="comment-author">
+                                                <a href="{% url 'user:showProfile'  question.userID_id %}">{{ answer.userID }}</a>
+                                                {% if request.user.id == question.userID_id %}
+                                                    <br>
+                                                    <a href="{% url 'question:editAnswer' answer.id %}"><i
+                                                            class="icon-edit"></i>Düzenle</a>
+                                                    <br>
+                                                    <a onclick="deleteAnswer({{ answer.id }})"><i
+                                                            class="icon-remove-circle"></i>Sil</a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="comment-vote">
+                                                <ul class="question-vote">
+                                                    <li><a onclick="voteUp({{ answer.id }})"
+                                                           class="question-vote-up"
+                                                           id="vote-up"></a></li>
+                                                    <li><a onclick="voteDown({{ answer.id }})"
+                                                           class="question-vote-down" id="vote-down"
+                                                           title="Beğenmedim"></a></li>
+                                                </ul>
+                                                <span style="float:left"
+                                                      class="answer-score-count">{{ answer.get_score_count }}</span>
+                                            </div>
+                                            <span class="question-vote-result">{{ answer.answerPoint }}</span>
+                                            <div class="comment-meta">
+                                                <div class="date"><i
+                                                        class="icon-time"></i>{{ answer.answerDate|naturaltime }}
+                                                </div>
+                                                {% if request.user.id == question.userID_id %}
+                                                    <a style="color: green !important;"
+                                                       onclick="bestAnswer({{ answer.id }})"><i
+                                                            class="icon-ok">En İyi Cevap Seç</i></a>
+                                                {% endif %}
+                                            </div>
+                                            <a class="comment-reply" onclick="$('#{{ answer.id }}').toggle()"><i
+                                                    class="icon-reply"></i>Cevapla</a>
+
+                                        </div>
+                                        <div class="text"><p>{{ answer|safe }}</p>
+                                        </div>
+                                        {% if answer.bestAnswer is True %}
+                                            <div class="question-answered question-answered-done"><i
+                                                    class="icon-ok"></i>En İyi Cevap
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="reply" id="{{ answer.id }}"
+                                         style="position: relative; left: 20%; display: none">
+                                        <form method="post" id="form{{ answer.id }}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="answerID" value="{{ answer.id }}">
+                                            <input type="text" placeholder="Cevabınızı yazın" style="width: 80%">
+                                            <p class="form-submit">
+                                                <input name="submit" type="submit" id="reply" value="Cevapla"
+                                                       class="button small color">
+                                            </p></form>
+                                    </div>
+                                </div>
+                                <ul class="children">
+                                    <li class="comment">
+                                        <ul class="children">
+                                            <li class="comment">
+                                                <div class="comment-body">
+                                                    <div class="avatar"><img alt=""
+                                                                             src="https://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
+                                                    </div>
+                                                    <div class="comment-text">
+                                                        <div class="author clearfix">
+                                                            <div class="comment-author"><a href="#">admin</a></div>
+                                                            <div class="comment-vote">
+                                                                <ul class="question-vote">
+                                                                    <li><a href="#" class="question-vote-up"
+                                                                           title="Like"></a></li>
+                                                                    <li><a href="#" class="question-vote-down"
+                                                                           title="Dislike"></a></li>
+                                                                </ul>
+                                                            </div>
+                                                            <span class="question-vote-result">+9</span>
+                                                            <div class="comment-meta">
+                                                                <div class="date"><i class="icon-time"></i>January
+                                                                    15 , 2014 at 10:00 pm
+                                                                </div>
+                                                            </div>
+                                                            <a class="comment-reply" href="#"><i
+                                                                    class="icon-reply"></i>Reply</a>
+                                                        </div>
+                                                        <div class="text"><p>Lorem ipsum dolor sit amet, consectetur
+                                                            adipiscing elit. Morbi adipiscing gravida odio, sit amet
+                                                            suscipit risus ultrices eu. Fusce viverra neque at purus
+                                                            laoreet consequat. Vivamus vulputate posuere nisl quis
+                                                            consequat.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul><!-- End children -->
+                                    </li>
+                                </ul>
+
+                            </li>
+                        {% endfor %}
+                    </ol><!-- End commentlist -->
+                </div><!-- End page-content -->
+                <div id="respond" class="comment-respond page-content clearfix">
+                    <div class="boxedtitle page-title"><h2>Cevabınızı Yazın</h2></div>
+                    <form method="post" id="commentform" class="comment-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="questionID" value="{{ question.id }}">
+                        <div id="respond-inputs" class="clearfix">
+                            {{ AnswerForm_.as_p }}
+                        </div>
+                        <p class="form-submit">
+                            <input name="submit" type="submit" id="submit" value="Cevapla"
+                                   class="button small color">
+                        </p>
+                    </form>
+                </div>
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include 'components/commonComponents/widget_stats.html' %}
+
+                {% include 'components/commonComponents/widget_social.html' %}
+
+                {% include loginPanel %}
+
+                {% include 'components/commonComponents/widget_highest_points.html' %}
+
+                {% include 'components/commonComponents/widget_tag_cloud.html' %}
+
+                {% include 'components/commonComponents/widget_recent_question.html' %}
+
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+{% endblock %}
+{% block script %}
+    {% if user.is_authenticated %}
+        <script>
+            var favoriteURL = "{% url 'question:addFavorite' %}";
+            var username = {{ request.user.id }};
+            var id = {{ question.id }};
+            $("#addFavorite").click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: favoriteURL,
+                    data: {
+                        'username': username,
+                        'id': id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status_) {
+                            $('#favoriteQuestion').text(data.counter_);
+                            $('#addFavorite').css({'background-color': '#dfaa63', 'color': 'white'});
+                            toastr.success('Favori olarak eklendi.')
+                        } else {
+                            $('#favoriteQuestion').text(data.counter_);
+                            $('#addFavorite').css({'background-color': '#2f3239', 'color': 'white'});
+                            toastr.success('Favorilerden kaldırıldı.')
+
+                        }
+                    }
+                })
+                ;
+            })
+        </script>
+
+        <script>
+            function voteUp(id) {
+                $(".comment-vote").on('click', '.question-vote-up', function (e) {
+                    e.preventDefault();
+                    var $this = $(this);
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url 'question:yesVote' %}',
+                        data: {
+                            'username': username,
+                            'answerID': id
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            var count = data.count;
+                            if (data) {
+                                console.log(data.count);
+                                $this.closest('div.comment-vote').find('.answer-score-count').html(count);
+                            }
+                        }
+                    })
+
+                })
+            }
+
+        </script>
+        <script>
+            function voteDown(id) {
+                $(".comment-vote").on('click', '.question-vote-down', function (e) {
+                    e.preventDefault();
+                    var $this = $(this);
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url 'question:noVote' %}',
+                        data: {
+                            'username': username,
+                            'answerID': id
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            var count = data.count;
+                            if (data) {
+                                console.log(data.count);
+                                $this.closest('div.comment-vote').find('.answer-score-count').html(count);
+                            }
+                        }
+                    })
+                })
+            }
+        </script>
+
+        <script>
+            function bestAnswer(id) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'question:bestAnswer' %}',
+                    data: {
+                        'username': username,
+                        'answerID': id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status) {
+                            location.reload();
+                        }
+                    }
+                })
+            }
+        </script>
+        <script>
+            var url = "{% url 'question:addAnswer' %}";
+            var username = {{ request.user.id }};
+            var id = {{ question.id }};
+            $(document).ready(function () {
+                $('#commentform').submit(function (e) {
+                    e.preventDefault();
+                    CKEDITOR.instances.id_answer.updateElement();
+                    var ckeditor = CKEDITOR.instances.id_answer.getData();
+                    var serializeForm = $(this).serialize();
+                    if (ckeditor.valueOf() == "" || ckeditor.valueOf() == null) {
+                        toastr.error('Boş cevap gönderilemez!')
+                    } else {
+                        $.ajax({
+                            data: $(this).serialize(),
+                            type: $(this).attr('method'),
+                            url: url,
+                            beforeSend: function () {
+                                toastr.success('Cevap gönderiliyor.')
+                            },
+                            success: function hidden(response) {
+                                if (response) {
+                                    toastr.success('Cevabiniz gönderildi');
+                                    $('#commentCounter').text(response.count_);
+                                    $('#commentCounter_').text(response.count_);
+                                    CKEDITOR.instances.id_answer.setData('');
+                                }
+                            },
+                            complete: function () {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+        {#        <script>#}
+        {#            var url = "{% url 'question:addReply' %}";#}
+        {#            var username = {{ request.user.id }};#}
+        {#            $(document).ready(function () {#}
+        {#                $('#reply').submit(function (e) {#}
+        {#                    var serializeForm = $(this).serialize();#}
+        {#                    console.log(serializeForm);#}
+        {#                });#}
+        {#            });#}
+        {#        </script>#}
+
+        <script>
+            function deleteQuestion(questionID) {
+                Swal.fire({
+                    title: 'Emin misin??',
+                    text: "Bu işlem geri döndürülemez!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Evet, Sil!',
+                    cancelButtonText: 'İptal'
+                }).then((result) => {
+                    var url = "{% url 'question:deleteQuestion'%}";
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: {
+                            'id': questionID
+                        },
+
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.status === 'E001') {
+                                toastr.success('Cevap silindi. Yönlendiriliyorsunuz.');
+                                window.location.replace('{% url 'home:home' %}');
+                            } else {
+                                toastr.error('Bir hata oluştu.');
+
+                            }
+                        }
+                    })
+                    ;
+                    if (result.value) {
+                        Swal.fire(
+                            'Silindi!',
+                            'Sorunuz silindi.',
+                            'success'
+                        );
+                        window.location.replace('{% url 'home:home' %}');
+                    }
+                });
+            }
+        </script>
+        <script>
+            function deleteAnswer(answerID) {
+                Swal.fire({
+                    title: 'Emin misin??',
+                    text: "Bu işlem geri döndürülemez!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Evet, Sil!',
+                    cancelButtonText: 'İptal'
+                }).then((result) => {
+                    var url = "{% url 'question:deleteAnswer'%}";
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: {
+                            'id': answerID
+                        },
+
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.status === 'E001') {
+                                toastr.success('Cevap silindi. Yönlendiriliyorsunuz.');
+                                window.location.replace('{% url 'home:home' %}');
+                            } else {
+                                toastr.error('Bir hata oluştu.');
+
+                            }
+                        }
+                    })
+                    ;
+                    if (result.value) {
+                        Swal.fire(
+                            'Silindi!',
+                            'Cevabınız silindi.',
+                            'success'
+                        )
+                    }
+                })
+            }
+        </script>
+    {% endif %}
+{% endblock %}

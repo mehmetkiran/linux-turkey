@@ -1,0 +1,29 @@
+{% extends base_template %}
+{% block title %}Profili Duzenle{% endblock %}
+{% block body %}
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="page-content">
+                    <div class="boxedtitle page-title"><h2>Profili Düzenle</h2></div>
+
+                    <div class="form-style form-style-4">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-inputs clearfix">
+                                {{ UserProfileChange.as_p }}
+                                <div class="clearfix"></div>
+                            </div>
+                            <p class="form-submit">
+                                <input type="submit" value="Güncelle" class="button color small login-submit submit">
+                            </p>
+                        </form>
+                    </div>
+                </div><!-- End page-content -->
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include 'components/sessionComponents/editProfileSideMenu.html' %}
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+{% endblock %}

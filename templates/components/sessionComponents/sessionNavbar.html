@@ -1,0 +1,65 @@
+{% extends 'components/baseComponents/base.html' %}
+
+{% block header %}
+    <div id="header-top">
+        <section class="container clearfix">
+            <nav class="header-top-nav">
+                <ul>
+                    <li><a href="{% url 'home:contacUs' %}"><i class="icon-envelope"></i>İletişim</a></li>
+                    <li><a href="{% url 'user:editProfile' %}"><i class="icon-user"></i>Profili Duzenle</a></li>
+                    <li><a href="{% url 'user:showProfile' request.user.id %}"><i class="icon-user"></i>Profilimi Göster</a>
+                    </li>
+                    <li><a href="{% url 'user:logout' %}"><i class="icon-remove-sign"></i>Çıkış</a></li>
+
+                </ul>
+            </nav>
+            <div class="header-search">
+                <form method="get" action="{% url 'home:search' %}">
+                    <input type="text" value="" name="query" placeholder="Arama Yap">
+                    <button type="submit" class="search-submit"></button>
+                </form>
+            </div>
+        </section><!-- End container -->
+    </div><!-- End header-top -->
+    <header id="header">
+        <section class="container clearfix">
+            <div class="logo"><a href="{% url 'home:home' %}">
+                <img alt="LOGO" src="{{ MAIN_LOGO }}" width="50px" height="50px">Linux Turkey</a>
+                <a href="{% url 'home:beta' %}"><sup>Beta </sup></a></div>
+            <nav class="navigation">
+                <ul>
+                    <li><a href="{% url 'home:home' %}">Ana Sayfa</a></li>
+                    <li class="ask_question"><a href="{% url 'question:askQuestion' %}">Soru Sor</a></li>
+                    <li><a href="{% url 'article:addArticle' %}">Makale Ekle</a></li>
+                    <li><a href="{% url 'article:home' %}">Blog</a>
+                        <ul>
+                            {% for categoryList in categoryList %}
+                                <li>
+                                    <a href="{% url 'article:showArticle' categoryList.categoryID %}">{{ categoryList }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li><a href="#">Kategoriler</a>
+                        <ul>
+                            {% for categoryList in categoryList %}
+                                <li>
+                                    <a href="{% url 'question:questionCategory' categoryList.categoryID %}">{{ categoryList }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'home:contacUs' %}">İletişime Geç</a></li>
+                </ul>
+            </nav>
+        </section><!-- End container -->
+    </header><!-- End header -->
+    {% if request.user.isVerified is False %}
+        <div class="alert-message warning">
+            <i class="icon-exclamation-sign"></i>
+            <p><span>Hesap Onaylanmadı!</span><br>
+                {{ request.user.username }}, E-Posta adresinize gelen onay kodunu <a href="{% url 'user:verify' %}"> bu
+                    adres üzerinden</a>kullanın. </p>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+<html>
+<head></head>
+<body>
+<p>Linux Turkey olarak altyapımızı değiştirdik. Yeni alt yapımız şu an beta sürümündedir. <br>Her geçen gün altyapımızı
+    geliştiriyoruz. Bu süre zarfında sistemimizde gördüğünüz açık, hata veya yeni bir özellik düşünürseniz lütfen bunu
+    bize bildirin.</p>
+<a href="{% url 'home:contacUs' %}">iletişim için</a>
+
+<br>
+<br>
+<code>DEBUG</code>
+<ul>
+    <li>app_version: {{ APP_VERSION }}</li>
+    <li>user-agent: {{ user_agent }}</li>
+
+</ul>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<div class="widget widget_login">
+    <h3 class="widget_title">Giriş Yap</h3>
+    <div class="form-style form-style-2">
+        <form>
+            <div class="form-inputs clearfix">
+                <p class="login-text">
+                    <input type="text" placeholder="Kullanıcı Adı">
+                    <i class="icon-user"></i>
+                </p>
+                <p class="login-password">
+                    <input type="password" placeholder="Parola">
+                    <i class="icon-lock"></i>
+                </p>
+                <a href="{% url 'user:forgotPassword' %}">Parolamı Unuttum</a>
+            </div>
+            <p class="form-submit login-submit">
+                <input type="submit" value="Giriş" class="button color small login-submit submit">
+            </p>
+            <div class="rememberme">
+                <label><input type="checkbox" checked="checked"> Hatırla</label>
+            </div>
+        </form>
+        <ul class="login-links">
+            <li><a href="{% url 'user:login' %}">Kayıt Ol</a></li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+</div>

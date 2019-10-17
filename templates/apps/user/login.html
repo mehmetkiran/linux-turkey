@@ -1,0 +1,52 @@
+{% extends base_template %}
+{% block body %}
+    <section class="container main-content">
+        <div class="login">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="page-content">
+                        <h2>Giriş Yap</h2>
+                        <div class="form-style form-style-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ LoginForm }}
+                                <p class="form-submit login-submit">
+                                    <button type="submit" name="submit" value="login_"
+                                            class="button color small login-submit submit">Giriş Yap
+                                    </button>
+                                </p>
+                                <div class="rememberme">
+                                    <label><input type="checkbox" disabled>Beni Hatırla</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!-- End page-content -->
+                </div><!-- End col-md-6 -->
+                <div class="col-md-6">
+                    <div class="page-content">
+                        <h2>Hemen Kayıt Ol</h2>
+                        <p>Aklına takılan soruları sormak için, makale yazmak için hemen kayıt ol.</p>
+                        <a href="{% url 'user:register' %}" class="button small color">Hesap Olustur</a>
+                    </div><!-- End page-content -->
+                </div><!-- End col-md-6 -->
+            </div><!-- End row -->
+        </div><!-- End login -->
+    </section><!-- End container -->
+
+    <div class="panel-pop" id="signup">
+        <h2>Register Now<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-inputs clearfix">
+                    {{ registerForm }}
+                </div>
+                <p class="form-submit">
+                    <button type="submit" name="submit" value="signup_" class="button small red-button">Kayıt Ol
+                    </button>
+                </p>
+            </form>
+        </div>
+    </div><!-- End signup -->
+
+{% endblock %}

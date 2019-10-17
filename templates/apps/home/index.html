@@ -1,0 +1,152 @@
+{% extends base_template %}
+{% load humanize %}
+{% block title %}Ana Sayfa{% endblock %}
+{% block body %}
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="tabs-warp question-tab">
+                    <ul class="tabs">
+                        <li class="tab"><a href="#" class="current">Son Sorular</a></li>
+                        <li class="tab"><a href="#">Cevapsız Sorular</a></li>
+                    </ul>
+                    <div class="tab-inner-warp">
+                        <div class="tab-inner">
+                            {% for question in questions %}
+                                <article class="question question-type-normal">
+                                    <h2>
+                                        <a href="{% url 'question:showQuestion'  slug=question.slug %}">{{ question.questionTitle }}</a>
+                                    </h2>
+                                    <a class="question-report"
+                                       href="{% url 'question:showQuestion' slug=question.slug %}"
+                                       id="reportQuestion">Raporla</a>
+                                    <div class="question-type-main"><i class="icon-question-sign"></i>Soru</div>
+                                    <div class="question-author">
+                                        <a href="{% url 'user:showProfile'  question.userID_id %}"
+                                           original-title="{{ question.userID }}"
+                                           class="question-author-img tooltip-n"><span></span>
+                                            <img alt=""
+                                                 src="{{ question.userID.profileImage.url }}"></a>
+                                    </div>
+                                    <div class="question-inner">
+                                        <div class="clearfix"></div>
+                                        <div class="post-content">
+                                            <p>{{ question.questionContent|safe|truncatewords:40 }}</p>
+                                            <a href="{% url 'question:showQuestion' slug=question.slug %}"
+                                               class="post-read-more button color small">Okumaya devam et...</a>
+                                        </div><!-- End post-content -->
+                                        <div class="question-details">
+                                            {#                                            <span class="question-answered question-answered-done"><i#}
+                                            {#                                                    class="icon-ok"></i>solved</span>#}
+                                            {#                                            <span class="question-favorite"><i class="icon-star"></i>5</span>#}
+                                        </div>
+                                        <span class="question-category"><a href="#"><i
+                                                class="icon-folder-close"></i>{{ question.categoryID }}</a></span>
+                                        <span class="question-date"><i
+                                                class="icon-time"></i>{{ question.questionCreateDate|naturaltime }}</span>
+                                        {#                                        <span class="question-comment"><a href="#"><i#}
+                                        {#                                                class="icon-comment"></i>5 Cevap</a></span>#}
+                                        <span class="question-view"><i
+                                                class="icon-user"></i>{{ question.questionViewCounter }}</span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                            <div class="">
+                                <span class="step-links">
+                                    {% if questions.has_previous %}
+                                        <a href="?page=1">&laquo; ilk</a>
+                                        <a href="?page={{ questions.previous_page_number }}">önce</a>
+                                    {% endif %}
+                                    <span class="current">
+                                        Page {{ questions.number }} of {{ questions.paginator.num_pages }}.
+
+                                        {% if questions.has_next %}
+                                            <a href="?page={{ questions.next_page_number }}">sonra</a>
+                                            <a href="?page={{ questions.paginator.num_pages }}">son &raquo;</a>
+                                        {% endif %}
+                                    </span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-inner-warp">
+                        <div class="tab-inner">
+                            {% for notAnswered in notAnswered_ %}
+                                <article class="question question-type-normal">
+                                    <h2>
+                                        <a href="{% url 'question:showQuestion' notAnswered.id %}">{{ notAnswered.questionTitle }}</a>
+                                    </h2>
+                                    <a class="question-report"
+                                       href="{% url 'question:showQuestion' notAnswered.id %}"
+                                       id="reportQuestion">Raporla</a>
+                                    <div class="question-type-main"><i class="icon-question-sign"></i>Soru</div>
+                                    <div class="question-author">
+                                        <a href="{% url 'user:showProfile'  notAnswered.userID_id %}"
+                                           original-title="{{ notAnswered.userID }}"
+                                           class="question-author-img tooltip-n"><span></span>
+                                            <img alt=""
+                                                 src="{{ notAnswered.userID.profileImage.url }}"></a>
+                                    </div>
+                                    <div class="question-inner">
+                                        <div class="clearfix"></div>
+                                        <div class="post-content">
+                                            <p>{{ notAnswered.questionContent|safe|truncatewords:40 }}</p>
+                                            <a href="{% url 'question:showQuestion' notAnswered.id %}"
+                                               class="post-read-more button color small">Okumaya devam et...</a>
+                                        </div><!-- End post-content -->
+                                        <div class="question-details">
+                                            {#                                            <span class="question-answered question-answered-done"><i#}
+                                            {#                                                    class="icon-ok"></i>solved</span>#}
+                                            {#                                            <span class="question-favorite"><i class="icon-star"></i>5</span>#}
+                                        </div>
+                                        <span class="question-category"><a href="#"><i
+                                                class="icon-folder-close"></i>{{ notAnswered.categoryID }}</a></span>
+                                        <span class="question-date"><i
+                                                class="icon-time"></i>{{ notAnswered.questionCreateDate|naturaltime }}</span>
+                                        {#                                        <span class="question-comment"><a href="#"><i#}
+                                        {#                                                class="icon-comment"></i>5 Cevap</a></span>#}
+                                        <span class="question-view"><i
+                                                class="icon-user"></i>{{ notAnswered.questionViewCounter }}</span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                            <div class="height_20"></div>
+                            <div class="pagination">
+                                {% if notAnswered_.has_previous %}
+                                    <a href="#" class="prev-button"><i class="icon-angle-left"></i></a>
+                                    <a href="?notAnsweredPage=1">&laquo; ilk</a>
+                                    <a href="?notAnsweredPage={{ notAnswered_.previous_page_number }}">
+                                        {{ notAnswered_.previous_page_number }}</a>
+                                {% endif %}
+                                {% if notAnswered_.has_next %}
+                                    <a href="?notAnsweredPage={{ notAnswered_.next_page_number }}">{{ notAnswered_.next_page_number }} </a>
+                                    <a href="?notAnsweredPage={{ notAnswered_.paginator.num_pages }}">son
+                                        &raquo;</a>
+                                    <a href="?notAnsweredPage={{ notAnswered_.next_page_number }}"
+                                       class="next-button"><i class="icon-angle-right"></i></a>
+                                {% endif %}
+                            </div><!-- End pagination -->
+                        </div>
+                    </div>
+                </div><!-- End page-content -->
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include 'components/commonComponents/widget_stats.html' %}
+
+                {% include 'components/commonComponents/widget_social.html' %}
+
+                {% include loginPanel %}
+
+                {% include 'components/commonComponents/widget_highest_points.html' %}
+
+                {% include 'components/commonComponents/widget_tag_cloud.html' %}
+
+                {% include 'components/commonComponents/widget_recent_question.html' %}
+
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+{% endblock %}
+{% block script %}
+{% endblock %}

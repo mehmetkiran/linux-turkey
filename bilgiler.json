@@ -1,0 +1,11 @@
+{
+  "prod-database": [
+    {
+      "database": "Dbname",
+      "username": "user",
+      "password": "password"
+    }
+  ],
+  
+
+}

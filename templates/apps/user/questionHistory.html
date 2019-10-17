@@ -1,0 +1,49 @@
+{% extends base_template %}
+{% load humanize %}
+{% load vote %}
+{% block title %}Ziyaret Edilen Sorular{% endblock %}
+
+{% block body %}
+    <div class="breadcrumbs">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Ziyaret Edilen Sorular</h1>
+                </div>
+                <div class="col-md-12">
+                    <div class="crumbs">
+                        <a href="{% url 'home:home' %}">Ana Sayfa</a>
+                        <span class="crumbs-span">/</span>
+                        <a>Ziyaret Edilen Sorular</a>
+
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </section><!-- End container -->
+    </div><!-- End breadcrumbs -->
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="page-content">
+                    <div class="boxedtitle page-title"><h2>Ziyaret Edilen Sorular</h2></div>
+                    <table id="loginHistory">
+                        <tr>
+                            <th>Soru Başlığı</th>
+                            <th>Tarih</th>
+                        </tr>
+                        {% for questionHistory in questionHistory %}
+                            <tr>
+                                <td><span title="">{{ questionHistory.questionID.questionTitle }}</span></td>
+                                <td><span title="">{{ questionHistory.historyDate }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div><!-- End page-content -->
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include sideMenu %}
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% load humanize %}
+<div class="widget">
+    <h3 class="widget_title">Son Sorular</h3>
+    <ul class="related-posts">
+        {% for lastQuestion in  lastQuestion %}
+            <li class="related-item">
+                <h3><a href="#">{{ lastQuestion.questionTitle }}</a></h3>
+                <p>{{ lastQuestion.questionContent|safe|truncatewords:10 }}</p>
+                <div class="clear"></div>
+                <span style="color: #888888 !important;">{{ lastQuestion.questionCreateDate|naturaltime }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

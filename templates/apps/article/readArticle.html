@@ -1,0 +1,216 @@
+{% extends base_template %}
+{% load humanize %}
+{% block body %}
+    <div class="breadcrumbs">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>{{ article.articleTitle }}</h1>
+                </div>
+                <div class="col-md-12">
+                    <div class="crumbs">
+                        <a href="{% url 'home:home' %}">Ana Sayfa</a>
+                        <span class="crumbs-span">/</span>
+                        <a href="{% url 'article:showArticle' article.categoryName_id %}">{{ article.categoryName }}</a>
+                        <span class="crumbs-span">/</span>
+                        <span class="current">{{ article.articleTitle }}</span>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </section><!-- End container -->
+    </div><!-- End breadcrumbs -->
+
+    <section class="container main-content">
+        <div class="row">
+            <div class="col-md-9">
+                <article class="post single-post clearfix">
+                    <div class="post-inner">
+                        <div class="post-img"><a href="{{ article.articleCoverImage.url }}">
+                            <img src="{{ article.articleCoverImage.url|default_if_none:'#' }}"
+                                 alt="{{ article.articleTitle }}"
+                                 style="width:810px; height:250px;">
+                        </a></div>
+                        <h2 class="post-title"><span class="post-type"><i
+                                class="icon-film"></i></span>{{ article.articleTitle }}</h2>
+                        <div class="post-meta">
+                            <span class="meta-author"><i class="icon-user"></i><a
+                                    href="#">{{ article.articleAuthor }}</a></span>
+                            <span class="meta-date"><i class="icon-time"></i>{{ article.articleCreateDate|naturaltime }}</span>
+                            <span class="meta-categories"><i class="icon-suitcase"></i><a
+                                    href="#">{{ article.categoryName }}</a></span>
+                            <span class="meta-comment"><i class="icon-comments-alt"></i><a
+                                    href="#">{{ answercount }}</a></span>
+{#                            <span class="meta-comment"><i class="icon-cloud-download"></i><a#}
+{#                                    href="{% url 'article:createPDF' %}">PDF Olarak İndir</a></span>#}
+                        </div>
+                        <div class="post-content">
+                            {{ article.articleContent|safe }}
+                        </div><!-- End post-content -->
+                        <div class="clearfix"></div>
+                    </div><!-- End post-inner -->
+                </article><!-- End article.post -->
+
+                <div class="share-tags page-content">
+                    <div class="share-inside-warp">
+                        <ul>
+                            <li>
+                                <a href="#" original-title="Facebook">
+                									<span class="icon_i">
+                										<span class="icon_square" icon_size="20" span_bg="#3b5997"
+                                                              span_hover="#666">
+                											<i i_color="#FFF" class="social_icon-facebook"></i>
+                										</span>
+                									</span>
+                                </a>
+                                <a href="#" target="_blank">Facebook</a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank">
+                									<span class="icon_i">
+                										<span class="icon_square" icon_size="20" span_bg="#00baf0"
+                                                              span_hover="#666">
+                											<i i_color="#FFF" class="social_icon-twitter"></i>
+                										</span>
+                									</span>
+                                </a>
+                                <a target="_blank" href="#">Twitter</a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank">
+                									<span class="icon_i">
+                										<span class="icon_square" icon_size="20" span_bg="#ca2c24"
+                                                              span_hover="#666">
+                											<i i_color="#FFF" class="social_icon-gplus"></i>
+                										</span>
+                									</span>
+                                </a>
+                                <a href="#" target="_blank">Google plus</a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank">
+                									<span class="icon_i">
+                										<span class="icon_square" icon_size="20" span_bg="#e64281"
+                                                              span_hover="#666">
+                											<i i_color="#FFF" class="social_icon-dribbble"></i>
+                										</span>
+                									</span>
+                                </a>
+                                <a href="#" target="_blank">Dribbble</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="#">
+                									<span class="icon_i">
+                										<span class="icon_square" icon_size="20" span_bg="#c7151a"
+                                                              span_hover="#666">
+                											<i i_color="#FFF" class="icon-pinterest"></i>
+                										</span>
+                									</span>
+                                </a>
+                                <a href="#" target="_blank">Pinterest</a>
+                            </li>
+                        </ul>
+                        <span class="share-inside-f-arrow"></span>
+                        <span class="share-inside-l-arrow"></span>
+                    </div><!-- End share-inside-warp -->
+                    <div class="share-inside"><i class="icon-share-alt"></i>Paylaş</div>
+                    <div class="clearfix"></div>
+                </div><!-- End share-tags -->
+
+                <div class="about-author clearfix">
+                    <div class="author-image">
+                        <a href="{% url 'user:showProfile'  article.articleAuthor_id %}"
+                           original-title="{{ article.articleAuthor }}"
+                           class="tooltip-n"><img alt=""
+                                                  src="{{ article.articleAuthor.profileImage.url }}"></a>
+                    </div>
+                    <div class="author-bio">
+                        <h4>Yazar Hakkında</h4>
+                        {{ article.articleAuthor.userAbout }}
+                    </div>
+                </div><!-- End about-author -->
+
+                <div id="related-posts">
+                    <h2>Benzer Makaleler</h2>
+                    <ul class="related-posts">
+
+                        {% for random_question in random_question %}
+                            <li class="related-item"><h3><a
+                                    href="{% url 'article:articleRead' random_question.id %}"><i
+                                    class="icon-double-angle-right"></i>{{ random_question.articleTitle }}</a></h3></li>
+                        {% endfor %}
+                    </ul>
+                </div><!-- End related-posts -->
+
+                <div id="commentlist" class="page-content">
+                    <div class="boxedtitle page-title"><h2>Yorumlar ( <span class="color">{{ answercount }}</span> )
+                    </h2></div>
+                    <ol class="commentlist clearfix">
+                        {% for answer in answer %}
+                            <li class="comment">
+                                <div class="comment-body clearfix">
+                                    <div class="avatar"><img alt="" src="{{ answer.userID.profileImage.url }}"></div>
+                                    <div class="comment-text">
+                                        <div class="author clearfix">
+                                            <div class="comment-meta">
+                                                <span>{{ answer.userID }}</span>
+                                                <div class="date">{{ answer.commentDate|naturaltime }}</div>
+                                            </div>
+                                            {#                                            <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>#}
+                                        </div>
+                                        <div class="text"><p>{{ answer.comment }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ol><!-- End commentlist -->
+                </div><!-- End page-content -->
+                {% if user.is_authenticated %}
+                    <div id="respond" class="comment-respond page-content clearfix">
+                        <div class="boxedtitle page-title"><h2>Cevapla</h2></div>
+                        <form action="" method="post" id="commentform" class="comment-form">
+                            {% csrf_token %}
+                            {{ commentForm.as_p }}
+                            <p class="form-submit">
+                                <input name="submit" type="submit" id="submit" value="Yorum Gönder"
+                                       class="button small color">
+                            </p>
+                        </form>
+                    </div>
+                {% else %}
+                    <div id="respond" class="comment-respond page-content clearfix">
+                        <div class="boxedtitle page-title"><h2>Cevapla</h2></div>
+                        <div class="alert-message warning">
+                            <i class="icon-exclamation-sign"></i>
+                            <p><span>Giriş Gerekli</span><br>
+                                Yorum yapmak için giriş yapmalısınız.</p>
+                        </div>
+                    </div>
+                {% endif %}
+                {#                <div class="post-next-prev clearfix">#}
+                {#                    <p class="prev-post">#}
+                {#                        <a href="#"><i class="icon-double-angle-left"></i>&nbsp;Prev post</a>#}
+                {#                    </p>#}
+                {#                    <p class="next-post">#}
+                {#                        <a href="#">Next post&nbsp;<i class="icon-double-angle-right"></i></a>#}
+                {#                    </p>#}
+                {#                </div><!-- End post-next-prev -->#}
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                {% include 'components/commonComponents/widget_stats.html' %}
+
+                {% include 'components/commonComponents/widget_social.html' %}
+
+                {% include loginPanel %}
+
+                {% include 'components/commonComponents/widget_highest_points.html' %}
+
+                {% include 'components/commonComponents/widget_tag_cloud.html' %}
+
+                {% include 'components/commonComponents/widget_recent_question.html' %}
+
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
+
+{% endblock %}
